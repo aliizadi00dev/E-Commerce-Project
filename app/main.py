@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import APIRouter, FastAPI
 
 import app.models  # noqa: F401
-from app.api.endpoints import carts, categories, orders, payments, products, stores, users, wallets
+from app.api.endpoints.v1 import carts, categories, orders, payments, products, stores, users, wallets
 from app.database import Base, engine
 
 
