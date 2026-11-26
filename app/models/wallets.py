@@ -1,14 +1,18 @@
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import ForeignKey, Numeric, String, Text, func
+from sqlalchemy import CheckConstraint, ForeignKey, Numeric, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.enums import WalletTransactionStatus, WalletTransactionType, sql_values
 from app.database import Base
 
 
 class Wallet(Base):
     __tablename__ = "wallets"
+    __table_args__ = (
+        CheckConstraint("balance >= 0", name="ck_wallets_balance_nonnegative"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True, index=True)
@@ -21,6 +25,11 @@ class Wallet(Base):
 
 class WalletTransaction(Base):
     __tablename__ = "wallet_transactions"
+    __table_args__ = (
+        CheckConstraint("amount > 0", name="ck_wallet_transactions_amount_positive"),
+        CheckConstraint(f"type IN ({sql_values(WalletTransactionType)})", name="ck_wallet_transactions_type"),
+        CheckConstraint(f"status IN ({sql_values(WalletTransactionStatus)})", name="ck_wallet_transactions_status"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     wallet_id: Mapped[int] = mapped_column(ForeignKey("wallets.id", ondelete="CASCADE"), index=True)
@@ -29,7 +38,7 @@ class WalletTransaction(Base):
     type: Mapped[str] = mapped_column(String(50))
     amount: Mapped[Decimal] = mapped_column(Numeric(12, 2))
     description: Mapped[str | None] = mapped_column(Text)
-    status: Mapped[str] = mapped_column(String(50), default="completed", server_default="completed")
+    status: Mapped[str] = mapped_column(String(50), default=WalletTransactionStatus.COMPLETED, server_default="completed")
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     wallet: Mapped["Wallet"] = relationship(back_populates="transactions")

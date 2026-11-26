@@ -1,20 +1,10 @@
-from contextlib import asynccontextmanager
-
 from fastapi import APIRouter, FastAPI
 
 import app.models  # noqa: F401
 from app.api.endpoints.v1 import auth, carts, categories, orders, payments, products, stores, users, wallets
-from app.database import Base, engine
 
 
-@asynccontextmanager
-async def lifespan(_: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
-
-
-app = FastAPI(title="FastEcom", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="FastEcom", version="0.1.0")
 
 api_v1 = APIRouter(prefix="/api/v1")
 

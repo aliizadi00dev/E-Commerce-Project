@@ -102,7 +102,9 @@ async def add_product_image(
     product = await _get_product_or_404(product_id, db)
     await _require_store_owner(product.store_id, db, current_user)
 
-    image = ProductImage(product_id=product_id, **payload.model_dump())
+    data = payload.model_dump()
+    data["image_url"] = str(data["image_url"])
+    image = ProductImage(product_id=product_id, **data)
     db.add(image)
     await db.commit()
     await db.refresh(image)

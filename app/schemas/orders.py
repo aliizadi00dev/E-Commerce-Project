@@ -1,7 +1,9 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.core.enums import OrderStatus, StoreOrderStatus
 
 
 class OrderItemRead(BaseModel):
@@ -11,8 +13,8 @@ class OrderItemRead(BaseModel):
     store_order_id: int
     product_id: int
     product_name: str
-    quantity: int
-    unit_price: Decimal
+    quantity: int = Field(gt=0)
+    unit_price: Decimal = Field(ge=0)
 
 
 class StoreOrderRead(BaseModel):
@@ -21,7 +23,7 @@ class StoreOrderRead(BaseModel):
     id: int
     order_id: int
     store_id: int
-    status: str
+    status: StoreOrderStatus
     subtotal: Decimal
     created_at: datetime
     items: list[OrderItemRead] = []
@@ -29,7 +31,7 @@ class StoreOrderRead(BaseModel):
 
 class OrderCreateItem(BaseModel):
     product_id: int
-    quantity: int
+    quantity: int = Field(gt=0)
 
 
 class OrderCreate(BaseModel):
@@ -38,7 +40,7 @@ class OrderCreate(BaseModel):
 
 
 class OrderUpdate(BaseModel):
-    status: str | None = None
+    status: OrderStatus | None = None
 
 
 class OrderRead(BaseModel):
@@ -47,7 +49,7 @@ class OrderRead(BaseModel):
     id: int
     user_id: int
     address_id: int
-    status: str
+    status: OrderStatus
     total_amount: Decimal
     created_at: datetime
     store_orders: list[StoreOrderRead] = []

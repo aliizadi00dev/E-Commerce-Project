@@ -1,14 +1,16 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.core.enums import WalletTransactionStatus, WalletTransactionType
 
 
 class WalletTransactionBase(BaseModel):
-    type: str
-    amount: Decimal
+    type: WalletTransactionType
+    amount: Decimal = Field(gt=0)
     description: str | None = None
-    status: str = "completed"
+    status: WalletTransactionStatus = WalletTransactionStatus.COMPLETED
     payment_id: int | None = None
     order_id: int | None = None
 
@@ -26,7 +28,7 @@ class WalletTransactionRead(WalletTransactionBase):
 
 
 class WalletBase(BaseModel):
-    balance: Decimal = Decimal("0.00")
+    balance: Decimal = Field(default=Decimal("0.00"), ge=0)
 
 
 class WalletCreate(WalletBase):
@@ -34,7 +36,7 @@ class WalletCreate(WalletBase):
 
 
 class WalletUpdate(BaseModel):
-    balance: Decimal | None = None
+    balance: Decimal | None = Field(default=None, ge=0)
 
 
 class WalletRead(WalletBase):

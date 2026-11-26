@@ -1,11 +1,13 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.core.enums import CartStatus
 
 
 class CartItemBase(BaseModel):
     product_id: int
-    quantity: int = 1
+    quantity: int = Field(default=1, gt=0)
 
 
 class CartItemCreate(CartItemBase):
@@ -13,7 +15,7 @@ class CartItemCreate(CartItemBase):
 
 
 class CartItemUpdate(BaseModel):
-    quantity: int
+    quantity: int = Field(gt=0)
 
 
 class CartItemRead(CartItemBase):
@@ -24,7 +26,7 @@ class CartItemRead(CartItemBase):
 
 
 class CartBase(BaseModel):
-    status: str = "active"
+    status: CartStatus = CartStatus.ACTIVE
 
 
 class CartCreate(CartBase):
@@ -32,7 +34,7 @@ class CartCreate(CartBase):
 
 
 class CartUpdate(BaseModel):
-    status: str | None = None
+    status: CartStatus | None = None
 
 
 class CartRead(CartBase):

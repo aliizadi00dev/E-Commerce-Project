@@ -1,16 +1,18 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+from app.core.enums import PaymentMethod, PaymentStatus
 
 
 class PaymentBase(BaseModel):
     order_id: int
-    method: str
+    method: PaymentMethod
     gateway: str | None = None
     gateway_reference: str | None = None
-    status: str = "pending"
-    amount: Decimal
+    status: PaymentStatus = PaymentStatus.PENDING
+    amount: Decimal = Field(gt=0)
 
 
 class PaymentCreate(PaymentBase):
@@ -18,10 +20,10 @@ class PaymentCreate(PaymentBase):
 
 
 class PaymentUpdate(BaseModel):
-    method: str | None = None
+    method: PaymentMethod | None = None
     gateway: str | None = None
     gateway_reference: str | None = None
-    status: str | None = None
+    status: PaymentStatus | None = None
     paid_at: datetime | None = None
 
 

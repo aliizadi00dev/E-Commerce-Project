@@ -1,13 +1,15 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+
+from app.core.enums import ProductStatus
 
 
 class ProductImageBase(BaseModel):
-    image_url: str
+    image_url: HttpUrl
     alt_text: str | None = None
-    position: int = 0
+    position: int = Field(default=0, ge=0)
 
 
 class ProductImageCreate(ProductImageBase):
@@ -26,9 +28,9 @@ class ProductBase(BaseModel):
     category_id: int
     name: str
     description: str | None = None
-    price: Decimal
-    stock: int = 0
-    status: str = "active"
+    price: Decimal = Field(ge=0)
+    stock: int = Field(default=0, ge=0)
+    status: ProductStatus = ProductStatus.ACTIVE
 
 
 class ProductCreate(ProductBase):
@@ -39,9 +41,9 @@ class ProductUpdate(BaseModel):
     category_id: int | None = None
     name: str | None = None
     description: str | None = None
-    price: Decimal | None = None
-    stock: int | None = None
-    status: str | None = None
+    price: Decimal | None = Field(default=None, ge=0)
+    stock: int | None = Field(default=None, ge=0)
+    status: ProductStatus | None = None
 
 
 class ProductRead(ProductBase):
