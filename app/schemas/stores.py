@@ -11,7 +11,7 @@ class StoreBase(BaseModel):
 
 
 class StoreCreate(StoreBase):
-    owner_id: int
+    pass
 
 
 class StoreUpdate(BaseModel):

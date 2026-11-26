@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import APIRouter, FastAPI
 
 import app.models  # noqa: F401
-from app.api.endpoints.v1 import carts, categories, orders, payments, products, stores, users, wallets
+from app.api.endpoints.v1 import auth, carts, categories, orders, payments, products, stores, users, wallets
 from app.database import Base, engine
 
 
@@ -18,6 +18,7 @@ app = FastAPI(title="FastEcom", version="0.1.0", lifespan=lifespan)
 
 api_v1 = APIRouter(prefix="/api/v1")
 
+api_v1.include_router(auth.router, prefix="/auth")
 api_v1.include_router(users.router, prefix="/users", tags=["Users"])
 api_v1.include_router(stores.router, prefix="/stores", tags=["Stores"])
 api_v1.include_router(categories.router, prefix="/categories", tags=["Categories"])

@@ -26,7 +26,6 @@ class WalletTransactionRead(WalletTransactionBase):
 
 
 class WalletBase(BaseModel):
-    user_id: int
     balance: Decimal = Decimal("0.00")
 
 
@@ -42,5 +41,6 @@ class WalletRead(WalletBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    user_id: int
     updated_at: datetime
     transactions: list[WalletTransactionRead] = []

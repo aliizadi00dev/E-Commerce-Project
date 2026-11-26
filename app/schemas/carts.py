@@ -24,7 +24,6 @@ class CartItemRead(CartItemBase):
 
 
 class CartBase(BaseModel):
-    user_id: int
     status: str = "active"
 
 
@@ -40,5 +39,6 @@ class CartRead(CartBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    user_id: int
     created_at: datetime
     items: list[CartItemRead] = []

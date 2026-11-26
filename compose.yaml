@@ -26,6 +26,8 @@ services:
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/fastecom
       APP_NAME: FastEcom
       DEBUG: "true"
+      SECRET_KEY: dev-only-secret-change-me
+      ADMIN_EMAILS: admin@example.com
     ports:
       - "8000:8000"
     volumes:

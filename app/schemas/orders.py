@@ -33,7 +33,6 @@ class OrderCreateItem(BaseModel):
 
 
 class OrderCreate(BaseModel):
-    user_id: int
     address_id: int
     items: list[OrderCreateItem]
 
