@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -43,4 +44,5 @@ class CartRead(CartBase):
     id: int
     user_id: int
     created_at: datetime
+    total_amount: Decimal = Decimal("0.00")
     items: list[CartItemRead] = []

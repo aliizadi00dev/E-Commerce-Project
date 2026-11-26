@@ -39,6 +39,10 @@ class OrderCreate(BaseModel):
     items: list[OrderCreateItem]
 
 
+class CheckoutRequest(BaseModel):
+    address_id: int
+
+
 class OrderUpdate(BaseModel):
     status: OrderStatus | None = None
 
